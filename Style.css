@@ -68,3 +68,19 @@ footer {
     margin-top: 10px;
     font-size: clamp(14px, 3vw, 18px);
 }
+
+.game-over {
+    position: fixed;
+    top: 40%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background: rgba(0,0,0,0.85);
+    color: white;
+    padding: 20px 30px;
+    font-size: 24px;
+    font-weight: bold;
+    border-radius: 10px;
+    text-align: center;
+    z-index: 999;
+}
+
