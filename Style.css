@@ -1,104 +1,68 @@
-/* 🎨 Estilo general */
-body {
+/* Reset básico */
+* {
     margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
     font-family: Arial, sans-serif;
-    background: linear-gradient(to bottom, #111, #222);
-    color: white;
+    background-color: #111;
+    color: #fff;
     text-align: center;
-    -webkit-user-select: none;
-    user-select: none;
-    overflow-x: hidden;
+    padding: 10px;
 }
 
 header {
-    padding: 10px;
-    background: #000000aa;
+    margin-bottom: 15px;
 }
 
-header h1 {
-    margin: 5px 0;
-    font-size: clamp(20px, 4vw, 32px);
+h1 {
+    font-size: 1.8rem;
+    margin-bottom: 5px;
 }
 
-header p {
-    font-size: clamp(14px, 3vw, 18px);
+p {
+    font-size: 1rem;
+    opacity: 0.9;
 }
 
-/* 🕹 Tablero de juego */
+/* Contenedor del juego */
 .game-container {
     display: grid;
     grid-template-columns: repeat(8, 1fr);
-    grid-template-rows: repeat(8, 1fr);
-    gap: 4px;
-    width: min(90vmin, 500px);
-    height: min(90vmin, 500px);
-    margin: 20px auto;
-    background: #333;
-    padding: 5px;
-    border-radius: 12px;
-    touch-action: manipulation;
+    gap: 3px;
+    margin: 0 auto;
+    /* Tamaño adaptable */
+    width: min(90vw, 500px);
+    height: min(90vw, 500px);
 }
 
+/* Celdas del tablero */
 .game-container img {
     width: 100%;
-    height: auto;
-    border-radius: 6px;
-    transition: transform 0.2s;
-    cursor: pointer;
+    height: 100%;
+    object-fit: contain;
+    touch-action: none; /* Mejora la experiencia táctil */
 }
 
-.game-container img:hover {
-    transform: scale(1.08);
-}
-
-/* 📱 Tablet */
-@media (max-width: 768px) {
-    .game-container {
-        width: 95vmin;
-        height: 95vmin;
-        gap: 3px;
-    }
-}
-
-/* 📱 Móviles pequeños */
-@media (max-width: 480px) {
-    header h1 {
-        font-size: clamp(18px, 6vw, 28px);
-    }
-    header p {
-        font-size: clamp(12px, 4vw, 16px);
-    }
-    .game-container {
-        width: 100vmin;
-        height: 100vmin;
-        gap: 2px;
-        padding: 3px;
-    }
-    footer {
-        font-size: clamp(12px, 4vw, 16px);
-        padding: 5px;
-    }
-}
-
+/* Footer */
 footer {
-    margin-top: 10px;
-    font-size: clamp(14px, 3vw, 18px);
+    margin-top: 15px;
+    font-size: 1.2rem;
 }
 
-/* 🛑 Pantalla de Game Over */
-.game-over {
-    position: fixed;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    background: rgba(0,0,0,0.9);
-    color: white;
-    padding: 20px;
-    font-size: clamp(18px, 5vw, 28px);
-    font-weight: bold;
-    border-radius: 10px;
-    text-align: center;
-    z-index: 999;
-    max-width: 90%;
-    box-shadow: 0 4px 12px rgba(0,0,0,0.5);
+/* Móviles pequeños */
+@media (max-width: 500px) {
+    h1 {
+        font-size: 1.4rem;
+    }
+
+    p {
+        font-size: 0.9rem;
+    }
+
+    footer {
+        font-size: 1rem;
+    }
 }
