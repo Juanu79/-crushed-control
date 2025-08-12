@@ -1,114 +1,104 @@
-/* Reset y fuente */
-* {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
-  font-family: sans-serif;
-}
-
+/* 🎨 Estilo general */
 body {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: flex-start;
-  min-height: 100vh;
-  background: linear-gradient(to bottom, #ff9ff3, #feca57);
-  padding: 10px;
+    margin: 0;
+    font-family: Arial, sans-serif;
+    background: linear-gradient(to bottom, #111, #222);
+    color: white;
+    text-align: center;
+    -webkit-user-select: none;
+    user-select: none;
+    overflow-x: hidden;
 }
 
-/* Título */
-h1 {
-  font-size: clamp(1.5rem, 5vw, 3rem);
-  color: white;
-  margin: 10px 0;
-  text-align: center;
+header {
+    padding: 10px;
+    background: #000000aa;
 }
 
-/* Contenedor del tablero */
-#game-container {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 10px;
-  max-width: 100%;
+header h1 {
+    margin: 5px 0;
+    font-size: clamp(20px, 4vw, 32px);
 }
 
-/* Tablero */
-#board {
-  display: grid;
-  grid-template-columns: repeat(8, 1fr);
-  gap: 2px;
-  background-color: rgba(255, 255, 255, 0.2);
-  padding: 5px;
-  border-radius: 10px;
+header p {
+    font-size: clamp(14px, 3vw, 18px);
 }
 
-#board img {
-  width: 100%;
-  height: auto;
-  aspect-ratio: 1 / 1;
-  border-radius: 5px;
-  cursor: pointer;
-  object-fit: cover;
-  transition: transform 0.1s ease;
+/* 🕹 Tablero de juego */
+.game-container {
+    display: grid;
+    grid-template-columns: repeat(8, 1fr);
+    grid-template-rows: repeat(8, 1fr);
+    gap: 4px;
+    width: min(90vmin, 500px);
+    height: min(90vmin, 500px);
+    margin: 20px auto;
+    background: #333;
+    padding: 5px;
+    border-radius: 12px;
+    touch-action: manipulation;
 }
 
-#board img:active {
-  transform: scale(0.9);
+.game-container img {
+    width: 100%;
+    height: auto;
+    border-radius: 6px;
+    transition: transform 0.2s;
+    cursor: pointer;
 }
 
-/* Marcador */
-#score {
-  font-size: clamp(1rem, 4vw, 1.5rem);
-  color: white;
-  font-weight: bold;
+.game-container img:hover {
+    transform: scale(1.08);
 }
 
-/* Botones */
-button {
-  padding: 10px 15px;
-  font-size: clamp(0.9rem, 3.5vw, 1.2rem);
-  border: none;
-  border-radius: 8px;
-  background-color: #ff6b6b;
-  color: white;
-  cursor: pointer;
-  transition: background-color 0.2s ease;
-}
-
-button:hover {
-  background-color: #ee5253;
-}
-
-/* Ventana de victoria */
-#win-message {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background-color: rgba(0,0,0,0.7);
-  color: white;
-  font-size: clamp(1.5rem, 5vw, 2.5rem);
-  font-weight: bold;
-  display: none;
-  align-items: center;
-  justify-content: center;
-  text-align: center;
-  padding: 20px;
-  z-index: 999;
-}
-
-/* Ajustes para pantallas pequeñas */
+/* 📱 Tablet */
 @media (max-width: 768px) {
-  #board {
-    width: 90vw;
-    max-width: 400px;
-  }
+    .game-container {
+        width: 95vmin;
+        height: 95vmin;
+        gap: 3px;
+    }
 }
 
+/* 📱 Móviles pequeños */
 @media (max-width: 480px) {
-  #board {
-    width: 95vw;
-  }
+    header h1 {
+        font-size: clamp(18px, 6vw, 28px);
+    }
+    header p {
+        font-size: clamp(12px, 4vw, 16px);
+    }
+    .game-container {
+        width: 100vmin;
+        height: 100vmin;
+        gap: 2px;
+        padding: 3px;
+    }
+    footer {
+        font-size: clamp(12px, 4vw, 16px);
+        padding: 5px;
+    }
+}
+
+footer {
+    margin-top: 10px;
+    font-size: clamp(14px, 3vw, 18px);
+}
+
+/* 🛑 Pantalla de Game Over */
+.game-over {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background: rgba(0,0,0,0.9);
+    color: white;
+    padding: 20px;
+    font-size: clamp(18px, 5vw, 28px);
+    font-weight: bold;
+    border-radius: 10px;
+    text-align: center;
+    z-index: 999;
+    max-width: 90%;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.5);
 }
