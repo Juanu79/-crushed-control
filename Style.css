@@ -1,155 +1,62 @@
-:root {
-  --bg: #000000;
-  --panel: #101010;
-  --tile-size: 64px;
-  --gap: 6px;
-  --cols: 8;
-}
-* {
-  box-sizing: border-box;
-  font-family: Inter, system-ui, -apple-system, Segoe UI, Roboto, "Helvetica Neue", Arial;
-}
 body {
+  background-color: #000;
+  color: #0ff;
+  font-family: Arial, sans-serif;
+  text-align: center;
   margin: 0;
-  padding: 24px;
-  background: radial-gradient(circle at top, #0a0f18, #000000);
-  color: #e6eef8;
-  display: flex;
-  gap: 18px;
-  align-items: flex-start;
-  justify-content: center;
-  min-height: 100vh;
+  padding: 0;
 }
 
-.container {
-  display: flex;
-  gap: 18px;
-  align-items: flex-start;
-}
-
-.board-panel {
-  background: var(--panel);
-  padding: 14px;
-  border-radius: 12px;
-  box-shadow: 0 6px 20px rgba(0, 255, 200, 0.2),
-              0 0 30px rgba(0, 255, 255, 0.05) inset;
-}
-
-.header {
-  display: flex;
-  gap: 12px;
-  align-items: center;
-  margin-bottom: 12px;
-}
 h1 {
-  font-size: 18px;
-  margin: 0;
-}
-.score {
-  margin-left: auto;
-  font-weight: 700;
-  background: linear-gradient(90deg, #00ffc6, #00bfff);
-  padding: 6px 10px;
-  border-radius: 8px;
-  color: #021223;
+  text-shadow: 0 0 10px #0ff, 0 0 20px #0ff;
 }
 
-.grid {
-  width: calc(var(--cols) * var(--tile-size) + (var(--cols) - 1) * var(--gap));
+#game-board {
   display: grid;
-  grid-template-columns: repeat(var(--cols), var(--tile-size));
-  grid-auto-rows: var(--tile-size);
-  gap: var(--gap);
-  background: linear-gradient(180deg, #0a0f18, #0a0f18);
-  padding: 12px;
-  border-radius: 10px;
-  position: relative;
+  grid-template-columns: repeat(8, 50px);
+  grid-template-rows: repeat(8, 50px);
+  gap: 5px;
+  justify-content: center;
+  margin: 20px auto;
 }
 
 .tile {
-  width: var(--tile-size);
-  height: var(--tile-size);
+  width: 50px;
+  height: 50px;
+  background-size: contain;
+  background-position: center;
+  background-repeat: no-repeat;
+  cursor: pointer;
   border-radius: 10px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-weight: 800;
-  font-size: 22px;
-  user-select: none;
-  cursor: grab;
-  transition: transform 0.18s ease, opacity 0.18s ease;
-  box-shadow: 0 4px 8px rgba(2, 6, 23, 0.45),
-              inset 0 -2px 0 rgba(0, 0, 0, 0.08);
-}
-.tile:active {
-  cursor: grabbing;
-}
-.tile.removing {
-  opacity: 0;
-  transform: scale(.2) rotate(60deg);
-  transition: all .45s ease;
+  box-shadow: 0 0 10px #0ff;
 }
 
-/* Xbox = verde */
-.type-xbox {
-  background: linear-gradient(180deg, #00ff44, #00cc33);
-  color: #002b00;
-  text-shadow: 0 0 5px #00ff44, 0 0 10px #00ff44;
-}
-/* PlayStation = azul */
-.type-ps {
-  background: linear-gradient(180deg, #00aaff, #0066cc);
-  color: #001933;
-  text-shadow: 0 0 5px #00aaff, 0 0 10px #00aaff;
-}
-/* Nintendo = rojo */
-.type-nin {
-  background: linear-gradient(180deg, #ff2b2b, #cc0000);
-  color: #330000;
-  text-shadow: 0 0 5px #ff2b2b, 0 0 10px #ff2b2b;
-}
-/* D-Pad = gris metálico */
-.type-dpad {
-  background: linear-gradient(180deg, #d9d9d9, #a6a6a6);
-  color: #1a1a1a;
-}
-/* Shoulder = púrpura */
-.type-shoulder {
-  background: linear-gradient(180deg, #b366ff, #6600cc);
-  color: #1a0033;
-}
-/* Start = amarillo */
-.type-start {
-  background: linear-gradient(180deg, #ffdd00, #e6b800);
-  color: #332b00;
+/* Colores de cada marca */
+.xbox {
+  background-image: url('https://upload.wikimedia.org/wikipedia/commons/4/43/Xbox_logo.svg');
+  background-color: #107c10;
 }
 
-.info {
-  width: 260px;
-  background: linear-gradient(180deg, #101010, #1a1a1a);
-  padding: 12px;
-  border-radius: 12px;
-  box-shadow: 0 6px 16px rgba(0, 255, 255, 0.2);
-  font-size: 14px;
+.play {
+  background-image: url('https://upload.wikimedia.org/wikipedia/commons/4/4e/PlayStation_logo.svg');
+  background-color: #003087;
 }
-.legend {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 8px;
-  margin-bottom: 10px;
+
+.nintendo {
+  background-image: url('https://upload.wikimedia.org/wikipedia/commons/0/0d/Nintendo.svg');
+  background-color: #e60012;
 }
-.legend .item {
-  display: flex;
-  gap: 8px;
-  align-items: center;
-}
-.mini {
-  width: 36px;
-  height: 36px;
-  border-radius: 8px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-weight: 700;
-  box-shadow: inset 0 -2px 0 rgba(0, 0, 0, 0.12);
+
+/* Responsive para móviles */
+@media (max-width: 600px) {
+  #game-board {
+    grid-template-columns: repeat(8, 40px);
+    grid-template-rows: repeat(8, 40px);
+    gap: 4px;
+  }
+
+  .tile {
+    width: 40px;
+    height: 40px;
+  }
 }
