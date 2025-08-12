@@ -1,62 +1,64 @@
 body {
-  background-color: #000;
-  color: #0ff;
-  font-family: Arial, sans-serif;
-  text-align: center;
-  margin: 0;
-  padding: 0;
+    font-family: Arial, sans-serif;
+    text-align: center;
+    background-color: #000;
+    color: #fff;
+    margin: 0;
+    padding: 0;
 }
 
 h1 {
-  text-shadow: 0 0 10px #0ff, 0 0 20px #0ff;
+    color: #00ffcc;
+    margin-top: 10px;
 }
 
 #game-board {
-  display: grid;
-  grid-template-columns: repeat(8, 50px);
-  grid-template-rows: repeat(8, 50px);
-  gap: 5px;
-  justify-content: center;
-  margin: 20px auto;
+    display: grid;
+    grid-template-columns: repeat(8, 50px);
+    grid-template-rows: repeat(8, 50px);
+    gap: 4px;
+    justify-content: center;
+    margin: 20px auto;
 }
 
-.tile {
-  width: 50px;
-  height: 50px;
-  background-size: contain;
-  background-position: center;
-  background-repeat: no-repeat;
-  cursor: pointer;
-  border-radius: 10px;
-  box-shadow: 0 0 10px #0ff;
+.cell {
+    width: 50px;
+    height: 50px;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: #111;
+    cursor: pointer;
+    user-select: none;
 }
 
-/* Colores de cada marca */
+.cell img {
+    max-width: 80%;
+    max-height: 80%;
+}
+
 .xbox {
-  background-image: url('https://upload.wikimedia.org/wikipedia/commons/4/43/Xbox_logo.svg');
-  background-color: #107c10;
+    background-color: #0f0;
 }
 
 .play {
-  background-image: url('https://upload.wikimedia.org/wikipedia/commons/4/4e/PlayStation_logo.svg');
-  background-color: #003087;
+    background-color: #00f;
 }
 
 .nintendo {
-  background-image: url('https://upload.wikimedia.org/wikipedia/commons/0/0d/Nintendo.svg');
-  background-color: #e60012;
+    background-color: #f00;
 }
 
-/* Responsive para móviles */
+/* 📱 Adaptación para móviles */
 @media (max-width: 600px) {
-  #game-board {
-    grid-template-columns: repeat(8, 40px);
-    grid-template-rows: repeat(8, 40px);
-    gap: 4px;
-  }
-
-  .tile {
-    width: 40px;
-    height: 40px;
-  }
+    #game-board {
+        grid-template-columns: repeat(8, 40px);
+        grid-template-rows: repeat(8, 40px);
+        gap: 3px;
+    }
+    .cell {
+        width: 40px;
+        height: 40px;
+    }
 }
