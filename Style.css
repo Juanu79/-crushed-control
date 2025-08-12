@@ -1,64 +1,39 @@
 body {
-    font-family: Arial, sans-serif;
-    text-align: center;
-    background-color: #000;
-    color: #fff;
-    margin: 0;
-    padding: 0;
+  background-color: #000;
+  color: #0ff;
+  font-family: Arial, sans-serif;
+  text-align: center;
 }
 
 h1 {
-    color: #00ffcc;
-    margin-top: 10px;
+  font-size: 6vw;
+  margin-top: 2vh;
 }
 
-#game-board {
-    display: grid;
-    grid-template-columns: repeat(8, 50px);
-    grid-template-rows: repeat(8, 50px);
-    gap: 4px;
-    justify-content: center;
-    margin: 20px auto;
+#puntuacion {
+  font-size: 5vw;
+  margin-bottom: 2vh;
 }
 
-.cell {
-    width: 50px;
-    height: 50px;
-    border-radius: 8px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    background-color: #111;
-    cursor: pointer;
-    user-select: none;
+#tablero {
+  display: grid;
+  grid-template-columns: repeat(8, 10vw);
+  grid-template-rows: repeat(8, 10vw);
+  gap: 0.5vw;
+  justify-content: center;
 }
 
-.cell img {
-    max-width: 80%;
-    max-height: 80%;
+.celda {
+  width: 10vw;
+  height: 10vw;
+  background-color: #111;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 0.2vw solid #0ff;
 }
 
-.xbox {
-    background-color: #0f0;
-}
-
-.play {
-    background-color: #00f;
-}
-
-.nintendo {
-    background-color: #f00;
-}
-
-/* 📱 Adaptación para móviles */
-@media (max-width: 600px) {
-    #game-board {
-        grid-template-columns: repeat(8, 40px);
-        grid-template-rows: repeat(8, 40px);
-        gap: 3px;
-    }
-    .cell {
-        width: 40px;
-        height: 40px;
-    }
+.celda img {
+  max-width: 90%;
+  max-height: 90%;
 }
