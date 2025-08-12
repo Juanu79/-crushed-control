@@ -3,7 +3,7 @@ const scoreElement = document.getElementById("score");
 
 const rows = 8;
 const cols = 8;
-const items = ["ps5.png", "xbox.png", "switch.png", "ps4.png", "xbox360.png"];
+const items = ["play.png", "xbox.png", "nintendo.png"];
 let score = 0;
 
 function createBoard() {
