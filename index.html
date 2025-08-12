@@ -2,14 +2,18 @@
 <html lang="es">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Juego Match 3</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>Crushed controller</title>
   <link rel="stylesheet" href="Style.css">
 </head>
 <body>
-  <h1>🎮 Match 3 Consolas 🎮 </h1>
-  <div id="puntuacion">Puntos: <span id="score">0</span></div>
-  <div id="tablero"></div>
+  <canvas id="gameCanvas"></canvas>
+
+  <!-- Controles táctiles para móviles -->
+  <div id="controls">
+    <button id="btnLeft">⬅</button>
+    <button id="btnRight">➡</button>
+  </div>
 
   <script src="proceso.js"></script>
 </body>

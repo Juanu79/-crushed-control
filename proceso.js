@@ -1,123 +1,61 @@
-const tablero = document.getElementById("tablero");
-const scoreDisplay = document.getElementById("score");
-const ancho = 8;
-let score = 0;
+const canvas = document.getElementById("gameCanvas");
+const ctx = canvas.getContext("2d");
 
-const imagenes = [
-  "imagenes/nintendo.png",
-  "imagenes/play.png",
-  "imagenes/xbox.png"
-];
+canvas.width = window.innerWidth;
+canvas.height = window.innerHeight;
 
-let celdas = [];
-
-// Crear tablero
-function crearTablero() {
-  for (let i = 0; i < ancho * ancho; i++) {
-    const celda = document.createElement("div");
-    celda.classList.add("celda");
-    celda.setAttribute("draggable", true);
-    celda.setAttribute("id", i);
-    let imagen = imagenes[Math.floor(Math.random() * imagenes.length)];
-    celda.style.backgroundImage = `url(${imagen})`;
-    tablero.appendChild(celda);
-    celdas.push(celda);
-  }
-}
-crearTablero();
-
-// Drag & drop
-let celdaArrastrada, celdaReemplazo, idArrastrada, idReemplazo;
-
-celdas.forEach(celda => {
-  celda.addEventListener("dragstart", arrastrar);
-  celda.addEventListener("dragover", e => e.preventDefault());
-  celda.addEventListener("drop", soltar);
-  celda.addEventListener("dragend", finArrastre);
+// Ajustar tamaño al cambiar de orientación o pantalla
+window.addEventListener("resize", () => {
+  canvas.width = window.innerWidth;
+  canvas.height = window.innerHeight;
 });
 
-function arrastrar() {
-  celdaArrastrada = this.style.backgroundImage;
-  idArrastrada = parseInt(this.id);
-}
+// Cargar imágenes
+const xboxImg = new Image();
+xboxImg.src = "xbox.png";
 
-function soltar() {
-  celdaReemplazo = this.style.backgroundImage;
-  idReemplazo = parseInt(this.id);
-}
+const playImg = new Image();
+playImg.src = "play.png";
 
-function finArrastre() {
-  let movimientosValidos = [
-    idArrastrada - 1, idArrastrada + 1,
-    idArrastrada - ancho, idArrastrada + ancho
-  ];
+// Variables del juego
+let playerX = canvas.width / 2 - 25;
+let playerY = canvas.height - 100;
+const playerWidth = 50;
+const playerHeight = 50;
+let speed = 5;
 
-  if (movimientosValidos.includes(idReemplazo)) {
-    celdas[idReemplazo].style.backgroundImage = celdaArrastrada;
-    celdas[idArrastrada].style.backgroundImage = celdaReemplazo;
+let keys = { left: false, right: false };
 
-    let valido = verificarMatches();
-    if (!valido) {
-      // revertir si no hay match
-      celdas[idReemplazo].style.backgroundImage = celdaReemplazo;
-      celdas[idArrastrada].style.backgroundImage = celdaArrastrada;
-    }
-  }
-}
+// Detección de teclado
+document.addEventListener("keydown", (e) => {
+  if (e.key === "ArrowLeft") keys.left = true;
+  if (e.key === "ArrowRight") keys.right = true;
+});
 
-// Verificar coincidencias
-function verificarMatches() {
-  let match = false;
+document.addEventListener("keyup", (e) => {
+  if (e.key === "ArrowLeft") keys.left = false;
+  if (e.key === "ArrowRight") keys.right = false;
+});
 
-  // Horizontal
-  for (let i = 0; i < ancho * ancho; i++) {
-    let fila = i % ancho;
-    if (fila < 6) {
-      let filaBloque = [i, i+1, i+2];
-      let img = celdas[i].style.backgroundImage;
-      if (img && filaBloque.every(id => celdas[id].style.backgroundImage === img)) {
-        match = true;
-        score += 10;
-        filaBloque.forEach(id => celdas[id].style.backgroundImage = "");
-      }
-    }
-  }
+// Detección táctil
+document.getElementById("btnLeft").addEventListener("touchstart", () => keys.left = true);
+document.getElementById("btnLeft").addEventListener("touchend", () => keys.left = false);
 
-  // Vertical
-  for (let i = 0; i < ancho * (ancho - 2); i++) {
-    let colBloque = [i, i+ancho, i+ancho*2];
-    let img = celdas[i].style.backgroundImage;
-    if (img && colBloque.every(id => celdas[id].style.backgroundImage === img)) {
-      match = true;
-      score += 10;
-      colBloque.forEach(id => celdas[id].style.backgroundImage = "");
-    }
-  }
-
-  scoreDisplay.textContent = score;
-  return match;
-}
-
-// Caída de fichas y relleno
-function caerFichas() {
-  for (let i = 0; i < ancho * ancho - ancho; i++) {
-    if (celdas[i + ancho].style.backgroundImage === "") {
-      celdas[i + ancho].style.backgroundImage = celdas[i].style.backgroundImage;
-      celdas[i].style.backgroundImage = "";
-    }
-  }
-
-  // Primera fila rellena
-  for (let i = 0; i < ancho; i++) {
-    if (celdas[i].style.backgroundImage === "") {
-      let img = imagenes[Math.floor(Math.random() * imagenes.length)];
-      celdas[i].style.backgroundImage = `url(${img})`;
-    }
-  }
-}
+document.getElementById("btnRight").addEventListener("touchstart", () => keys.right = true);
+document.getElementById("btnRight").addEventListener("touchend", () => keys.right = false);
 
 // Bucle del juego
-window.setInterval(function () {
-  verificarMatches();
-  caerFichas();
-}, 100);
+function draw() {
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+  // Dibujar jugador
+  ctx.drawImage(xboxImg, playerX, playerY, playerWidth, playerHeight);
+
+  // Movimiento
+  if (keys.left && playerX > 0) playerX -= speed;
+  if (keys.right && playerX < canvas.width - playerWidth) playerX += speed;
+
+  requestAnimationFrame(draw);
+}
+
+draw();
