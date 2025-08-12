@@ -264,3 +264,45 @@ function chainResolveMatches() {
 
 // ---------- Iniciar ----------
 createBoard();
+
+function getTileFromTouch(touch) {
+  let el = document.elementFromPoint(touch.clientX, touch.clientY);
+  while (el && !el.dataset?.id && el !== document.body) {
+    el = el.parentElement;
+  }
+  return el;
+}
+
+function onTouchStart(e) {
+  if (gameOver) return;
+  e.preventDefault();
+  const tile = e.target;
+  if (tile.dataset && tile.dataset.id) {
+    draggedIndex = Number(tile.dataset.id);
+    ongoingTouchTarget = tile;
+    tile.classList.add("dragging");
+  }
+}
+
+function onTouchMove(e) {
+  if (gameOver) return;
+  e.preventDefault();
+  const touch = e.touches[0];
+  const el = getTileFromTouch(touch);
+  if (el && el.dataset?.id) {
+    targetIndex = Number(el.dataset.id);
+  }
+}
+
+function onTouchEnd(e) {
+  if (gameOver) return;
+  e.preventDefault();
+  const touch = e.changedTouches[0];
+  const el = getTileFromTouch(touch);
+  if (el && el.dataset?.id) {
+    targetIndex = Number(el.dataset.id);
+  }
+  if (ongoingTouchTarget) ongoingTouchTarget.classList.remove("dragging");
+  handleSwapFromDrag();
+  ongoingTouchTarget = null;
+}
