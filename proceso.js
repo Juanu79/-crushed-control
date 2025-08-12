@@ -8,12 +8,10 @@ document.addEventListener("DOMContentLoaded", () => {
 
     // Imágenes de consolas
     const consoleImages = [
-        "img/ps5.png",
-        "img/xbox.png",
-        "img/switch.png",
-        "img/psp.png",
-        "img/gameboy.png",
-        "img/dreamcast.png"
+        "imagenes/play.png",
+        "imagenes/xbox.png",
+        "imagenes/nintendo.png",
+       
     ];
 
     // Crear el tablero
