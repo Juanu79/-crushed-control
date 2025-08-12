@@ -1,119 +1,123 @@
 const tablero = document.getElementById("tablero");
-const puntuacionElemento = document.getElementById("puntuacion");
+const scoreDisplay = document.getElementById("score");
+const ancho = 8;
+let score = 0;
 
-const filas = 8;
-const columnas = 8;
-let puntos = 0;
-
-const simbolos = [
-  "https://upload.wikimedia.org/wikipedia/commons/0/0d/Nintendo_switch_logo.svg",
-  "https://upload.wikimedia.org/wikipedia/commons/4/4e/Xbox_one_logo.svg",
-  "https://upload.wikimedia.org/wikipedia/commons/0/05/PlayStation_logo.svg"
+const imagenes = [
+  "imagenes/nintendo.png",
+  "imagenes/play.png",
+  "imagenes/xbox.png"
 ];
 
-let tableroDatos = [];
+let celdas = [];
 
-// Crear tablero inicial
+// Crear tablero
 function crearTablero() {
-  tablero.innerHTML = "";
-  tableroDatos = [];
-
-  for (let fila = 0; fila < filas; fila++) {
-    let filaDatos = [];
-    for (let col = 0; col < columnas; col++) {
-      const celda = document.createElement("div");
-      celda.classList.add("celda");
-
-      const img = document.createElement("img");
-      const simbolo = simbolos[Math.floor(Math.random() * simbolos.length)];
-      img.src = simbolo;
-      celda.appendChild(img);
-
-      filaDatos.push(simbolo);
-      tablero.appendChild(celda);
-    }
-    tableroDatos.push(filaDatos);
+  for (let i = 0; i < ancho * ancho; i++) {
+    const celda = document.createElement("div");
+    celda.classList.add("celda");
+    celda.setAttribute("draggable", true);
+    celda.setAttribute("id", i);
+    let imagen = imagenes[Math.floor(Math.random() * imagenes.length)];
+    celda.style.backgroundImage = `url(${imagen})`;
+    tablero.appendChild(celda);
+    celdas.push(celda);
   }
 }
-
-function verificarMatches() {
-  let eliminados = new Set();
-
-  // Filas
-  for (let fila = 0; fila < filas; fila++) {
-    for (let col = 0; col < columnas - 2; col++) {
-      const s = tableroDatos[fila][col];
-      if (s && s === tableroDatos[fila][col + 1] && s === tableroDatos[fila][col + 2]) {
-        eliminados.add(`${fila}-${col}`);
-        eliminados.add(`${fila}-${col + 1}`);
-        eliminados.add(`${fila}-${col + 2}`);
-      }
-    }
-  }
-
-  // Columnas
-  for (let col = 0; col < columnas; col++) {
-    for (let fila = 0; fila < filas - 2; fila++) {
-      const s = tableroDatos[fila][col];
-      if (s && s === tableroDatos[fila + 1][col] && s === tableroDatos[fila + 2][col]) {
-        eliminados.add(`${fila}-${col}`);
-        eliminados.add(`${fila + 1}-${col}`);
-        eliminados.add(`${fila + 2}-${col}`);
-      }
-    }
-  }
-
-  // Sumar puntos
-  if (eliminados.size > 0) {
-    puntos += eliminados.size * 10;
-    puntuacionElemento.textContent = `Puntos: ${puntos}`;
-    eliminados.forEach(pos => {
-      const [f, c] = pos.split("-").map(Number);
-      tableroDatos[f][c] = null;
-    });
-    actualizarTablero();
-  }
-}
-
-function actualizarTablero() {
-  // Bajar símbolos
-  for (let col = 0; col < columnas; col++) {
-    for (let fila = filas - 1; fila >= 0; fila--) {
-      if (!tableroDatos[fila][col]) {
-        for (let k = fila - 1; k >= 0; k--) {
-          if (tableroDatos[k][col]) {
-            tableroDatos[fila][col] = tableroDatos[k][col];
-            tableroDatos[k][col] = null;
-            break;
-          }
-        }
-      }
-    }
-  }
-
-  // Rellenar huecos
-  for (let fila = 0; fila < filas; fila++) {
-    for (let col = 0; col < columnas; col++) {
-      if (!tableroDatos[fila][col]) {
-        tableroDatos[fila][col] = simbolos[Math.floor(Math.random() * simbolos.length)];
-      }
-    }
-  }
-
-  renderizarTablero();
-}
-
-function renderizarTablero() {
-  const celdas = tablero.querySelectorAll(".celda");
-  let i = 0;
-  for (let fila = 0; fila < filas; fila++) {
-    for (let col = 0; col < columnas; col++) {
-      const img = celdas[i].querySelector("img");
-      img.src = tableroDatos[fila][col];
-      i++;
-    }
-  }
-}
-
 crearTablero();
-setInterval(verificarMatches, 500);
+
+// Drag & drop
+let celdaArrastrada, celdaReemplazo, idArrastrada, idReemplazo;
+
+celdas.forEach(celda => {
+  celda.addEventListener("dragstart", arrastrar);
+  celda.addEventListener("dragover", e => e.preventDefault());
+  celda.addEventListener("drop", soltar);
+  celda.addEventListener("dragend", finArrastre);
+});
+
+function arrastrar() {
+  celdaArrastrada = this.style.backgroundImage;
+  idArrastrada = parseInt(this.id);
+}
+
+function soltar() {
+  celdaReemplazo = this.style.backgroundImage;
+  idReemplazo = parseInt(this.id);
+}
+
+function finArrastre() {
+  let movimientosValidos = [
+    idArrastrada - 1, idArrastrada + 1,
+    idArrastrada - ancho, idArrastrada + ancho
+  ];
+
+  if (movimientosValidos.includes(idReemplazo)) {
+    celdas[idReemplazo].style.backgroundImage = celdaArrastrada;
+    celdas[idArrastrada].style.backgroundImage = celdaReemplazo;
+
+    let valido = verificarMatches();
+    if (!valido) {
+      // revertir si no hay match
+      celdas[idReemplazo].style.backgroundImage = celdaReemplazo;
+      celdas[idArrastrada].style.backgroundImage = celdaArrastrada;
+    }
+  }
+}
+
+// Verificar coincidencias
+function verificarMatches() {
+  let match = false;
+
+  // Horizontal
+  for (let i = 0; i < ancho * ancho; i++) {
+    let fila = i % ancho;
+    if (fila < 6) {
+      let filaBloque = [i, i+1, i+2];
+      let img = celdas[i].style.backgroundImage;
+      if (img && filaBloque.every(id => celdas[id].style.backgroundImage === img)) {
+        match = true;
+        score += 10;
+        filaBloque.forEach(id => celdas[id].style.backgroundImage = "");
+      }
+    }
+  }
+
+  // Vertical
+  for (let i = 0; i < ancho * (ancho - 2); i++) {
+    let colBloque = [i, i+ancho, i+ancho*2];
+    let img = celdas[i].style.backgroundImage;
+    if (img && colBloque.every(id => celdas[id].style.backgroundImage === img)) {
+      match = true;
+      score += 10;
+      colBloque.forEach(id => celdas[id].style.backgroundImage = "");
+    }
+  }
+
+  scoreDisplay.textContent = score;
+  return match;
+}
+
+// Caída de fichas y relleno
+function caerFichas() {
+  for (let i = 0; i < ancho * ancho - ancho; i++) {
+    if (celdas[i + ancho].style.backgroundImage === "") {
+      celdas[i + ancho].style.backgroundImage = celdas[i].style.backgroundImage;
+      celdas[i].style.backgroundImage = "";
+    }
+  }
+
+  // Primera fila rellena
+  for (let i = 0; i < ancho; i++) {
+    if (celdas[i].style.backgroundImage === "") {
+      let img = imagenes[Math.floor(Math.random() * imagenes.length)];
+      celdas[i].style.backgroundImage = `url(${img})`;
+    }
+  }
+}
+
+// Bucle del juego
+window.setInterval(function () {
+  verificarMatches();
+  caerFichas();
+}, 100);
