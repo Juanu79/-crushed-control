@@ -1,136 +1,79 @@
-const board = document.getElementById("game-board");
-const scoreElement = document.getElementById("score");
+const grid = document.querySelector('#grid');
+const icons = ['imagenes/nintendo.png', 'imagenes/play.png', 'imagenes/xbox.png'];
+const size = 6;
+let cells = [];
+let selected = null;
 
-const rows = 8;
-const cols = 8;
-const items = ["play.png", "xbox.png", "nintendo.png"];
-let score = 0;
-
+// Crear el tablero
 function createBoard() {
-    for (let r = 0; r < rows; r++) {
-        for (let c = 0; c < cols; c++) {
-            const cell = document.createElement("div");
-            cell.classList.add("cell");
-            cell.dataset.row = r;
-            cell.dataset.col = c;
-            const img = document.createElement("img");
-            img.src = `imagenes/${items[Math.floor(Math.random() * items.length)]}`;
-            cell.appendChild(img);
-            board.appendChild(cell);
-        }
+    grid.innerHTML = '';
+    cells = [];
+    for (let i = 0; i < size * size; i++) {
+        const cell = document.createElement('img');
+        cell.src = icons[Math.floor(Math.random() * icons.length)];
+        cell.dataset.index = i;
+        cell.classList.add('cell');
+
+        // Eventos para PC
+        cell.addEventListener('mousedown', handleSelect);
+        cell.addEventListener('mouseup', handleSwap);
+
+        // Eventos para móviles
+        cell.addEventListener('touchstart', handleSelect);
+        cell.addEventListener('touchend', handleSwap);
+
+        grid.appendChild(cell);
+        cells.push(cell);
     }
 }
 
-function swapCells(cell1, cell2) {
-    const temp = cell1.firstChild.src;
-    cell1.firstChild.src = cell2.firstChild.src;
-    cell2.firstChild.src = temp;
+// Seleccionar una celda
+function handleSelect(e) {
+    e.preventDefault();
+    let target = e.target;
+    if (target.tagName !== 'IMG') return;
+    selected = target;
 }
 
+// Intercambiar con otra celda
+function handleSwap(e) {
+    e.preventDefault();
+    let target = e.target;
+    if (!selected || target === selected) return;
+
+    // Intercambiar imágenes
+    let temp = selected.src;
+    selected.src = target.src;
+    target.src = temp;
+
+    selected = null;
+    checkMatches();
+}
+
+// Detectar combinaciones
 function checkMatches() {
-    let matched = false;
+    for (let i = 0; i < cells.length; i++) {
+        let row = Math.floor(i / size);
+        let col = i % size;
 
-    // Check filas
-    for (let r = 0; r < rows; r++) {
-        for (let c = 0; c < cols - 2; c++) {
-            const cell1 = document.querySelector(`[data-row='${r}'][data-col='${c}'] img`);
-            const cell2 = document.querySelector(`[data-row='${r}'][data-col='${c + 1}'] img`);
-            const cell3 = document.querySelector(`[data-row='${r}'][data-col='${c + 2}'] img`);
+        // Horizontal
+        if (col < size - 2) {
+            if (cells[i].src === cells[i + 1].src && cells[i].src === cells[i + 2].src) {
+                cells[i].src = icons[Math.floor(Math.random() * icons.length)];
+                cells[i + 1].src = icons[Math.floor(Math.random() * icons.length)];
+                cells[i + 2].src = icons[Math.floor(Math.random() * icons.length)];
+            }
+        }
 
-            if (cell1.src === cell2.src && cell1.src === cell3.src) {
-                matched = true;
-                cell1.parentElement.removeChild(cell1);
-                cell2.parentElement.removeChild(cell2);
-                cell3.parentElement.removeChild(cell3);
-                score += 10;
+        // Vertical
+        if (row < size - 2) {
+            if (cells[i].src === cells[i + size].src && cells[i].src === cells[i + size * 2].src) {
+                cells[i].src = icons[Math.floor(Math.random() * icons.length)];
+                cells[i + size].src = icons[Math.floor(Math.random() * icons.length)];
+                cells[i + size * 2].src = icons[Math.floor(Math.random() * icons.length)];
             }
         }
     }
-
-    // Check columnas
-    for (let c = 0; c < cols; c++) {
-        for (let r = 0; r < rows - 2; r++) {
-            const cell1 = document.querySelector(`[data-row='${r}'][data-col='${c}'] img`);
-            const cell2 = document.querySelector(`[data-row='${r + 1}'][data-col='${c}'] img`);
-            const cell3 = document.querySelector(`[data-row='${r + 2}'][data-col='${c}'] img`);
-
-            if (cell1 && cell2 && cell3 && cell1.src === cell2.src && cell1.src === cell3.src) {
-                matched = true;
-                cell1.parentElement.removeChild(cell1);
-                cell2.parentElement.removeChild(cell2);
-                cell3.parentElement.removeChild(cell3);
-                score += 10;
-            }
-        }
-    }
-
-    scoreElement.textContent = score;
-    return matched;
-}
-
-function dropItems() {
-    for (let c = 0; c < cols; c++) {
-        for (let r = rows - 1; r >= 0; r--) {
-            const cell = document.querySelector(`[data-row='${r}'][data-col='${c}']`);
-            if (!cell.firstChild) {
-                for (let rr = r - 1; rr >= 0; rr--) {
-                    const aboveCell = document.querySelector(`[data-row='${rr}'][data-col='${c}']`);
-                    if (aboveCell.firstChild) {
-                        cell.appendChild(aboveCell.firstChild);
-                        break;
-                    }
-                }
-            }
-        }
-    }
-}
-
-function refillBoard() {
-    for (let r = 0; r < rows; r++) {
-        for (let c = 0; c < cols; c++) {
-            const cell = document.querySelector(`[data-row='${r}'][data-col='${c}']`);
-            if (!cell.firstChild) {
-                const img = document.createElement("img");
-                img.src = `imagenes/${items[Math.floor(Math.random() * items.length)]}`;
-                cell.appendChild(img);
-            }
-        }
-    }
-}
-
-// Variables para seleccionar celda
-let firstCell = null;
-
-function startSelect(e) {
-    e.preventDefault();
-    const cell = e.target.closest(".cell");
-    if (cell) {
-        firstCell = cell;
-    }
-}
-
-function endSelect(e) {
-    e.preventDefault();
-    const cell = e.target.closest(".cell");
-    if (cell && firstCell && cell !== firstCell) {
-        swapCells(firstCell, cell);
-        if (!checkMatches()) {
-            swapCells(firstCell, cell);
-        } else {
-            dropItems();
-            refillBoard();
-        }
-    }
-    firstCell = null;
 }
 
 createBoard();
-
-// Soporte PC + Móvil
-const cells = document.querySelectorAll(".cell");
-cells.forEach(cell => {
-    cell.addEventListener("mousedown", startSelect);
-    cell.addEventListener("mouseup", endSelect);
-    cell.addEventListener("touchstart", startSelect, { passive: false });
-    cell.addEventListener("touchend", endSelect, { passive: false });
-});
