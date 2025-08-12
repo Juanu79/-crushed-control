@@ -1,20 +1,26 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <title>Crushed controller</title>
-  <link rel="stylesheet" href="Style.css">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Candy Crush de Consolas</title>
+    <link rel="stylesheet" href="Style.css">
 </head>
 <body>
-  <canvas id="gameCanvas"></canvas>
 
-  <!-- Controles táctiles para móviles -->
-  <div id="controls">
-    <button id="btnLeft">⬅</button>
-    <button id="btnRight">➡</button>
-  </div>
+    <header>
+        <h1>🎮 Candy Crush Consolas</h1>
+        <p>Combina 3 o más consolas iguales para ganar puntos</p>
+    </header>
 
-  <script src="proceso.js"></script>
+    <main>
+        <div class="game-container" id="game-board"></div>
+    </main>
+
+    <footer>
+        <p>Puntaje: <span id="score">0</span></p>
+    </footer>
+
+    <script src="proceso.js"></script>
 </body>
 </html>

@@ -1,62 +1,31 @@
-// Selecciona el canvas y su contexto
-const canvas = document.getElementById("gameCanvas");
-const ctx = canvas.getContext("2d");
+const board = document.getElementById("game-board");
+const scoreDisplay = document.getElementById("score");
 
-// Ajustar el tamaño del canvas al tamaño de la ventana
-function resizeCanvas() {
-    canvas.width = window.innerWidth;
-    canvas.height = window.innerHeight;
-}
-resizeCanvas();
-window.addEventListener("resize", resizeCanvas);
+const width = 8;
+let score = 0;
 
-// Variables del juego
-let player = {
-    x: 50,
-    y: canvas.height - 100,
-    width: 50,
-    height: 50,
-    color: "red",
-    velocityY: 0,
-    jumpForce: 15,
-    gravity: 0.8,
-    isJumping: false
-};
+// Imágenes del juego
+const consoles = [
+    "imagenes/nintendo.png",
+    "imagenes/play.png",
+    "imagenes/xbox.png"
+];
 
-// Función de salto
-function jump() {
-    if (!player.isJumping) {
-        player.velocityY = -player.jumpForce;
-        player.isJumping = true;
+// Crear el tablero
+let squares = [];
+
+function createBoard() {
+    for (let i = 0; i < width * width; i++) {
+        const square = document.createElement("img");
+        let randomConsole = Math.floor(Math.random() * consoles.length);
+        square.setAttribute("src", consoles[randomConsole]);
+        square.setAttribute("data-id", i);
+        board.appendChild(square);
+        squares.push(square);
     }
 }
 
-// Detectar clic o toque en pantalla
-canvas.addEventListener("click", jump);
-canvas.addEventListener("touchstart", function (e) {
-    e.preventDefault();
-    jump();
-}, { passive: false });
+createBoard();
 
-// Bucle del juego
-function update() {
-    ctx.clearRect(0, 0, canvas.width, canvas.height);
-
-    // Aplicar gravedad
-    player.velocityY += player.gravity;
-    player.y += player.velocityY;
-
-    // Evitar que se caiga
-    if (player.y + player.height >= canvas.height) {
-        player.y = canvas.height - player.height;
-        player.isJumping = false;
-    }
-
-    // Dibujar jugador
-    ctx.fillStyle = player.color;
-    ctx.fillRect(player.x, player.y, player.width, player.height);
-
-    requestAnimationFrame(update);
-}
-
-update();
+// Aquí iría la lógica para arrastrar, soltar y verificar combinaciones
+// Puedes seguir adaptando tu lógica original aquí
