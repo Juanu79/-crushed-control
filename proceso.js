@@ -41,13 +41,13 @@ document.addEventListener("DOMContentLoaded", () => {
   function showWinModal() {
     const modal = document.createElement("div");
     modal.className = "modal show";
-    modal.innerHTML = 
+    modal.innerHTML = `
       <div class="panel">
         <h2>🏆 ¡Has alcanzado ${TARGET_SCORE} puntos! 🏆</h2>
         <p>¡Juego terminado! Puntuación final: ${score}</p>
         <button id="reloadBtn">Reiniciar</button>
       </div>
-    ;
+    `;
     document.body.appendChild(modal);
     document.getElementById("reloadBtn").addEventListener("click", () => location.reload());
   }
